@@ -69,7 +69,74 @@ Q值的下限可防止离线RL设置中常见的高估，这是由于OOD操作�
 
 ### Conservative Off-Policy Evaluation
 
+我们的目标是利用通过 behavior policy  $\pi_\beta(\textbf{a}|\textbf{s})$ 生成的数据集 $\mathcal{D}$ 来估计 target policy $\pi$ 的值 $V^\pi(\textbf{s})$。上文所提到的保守正则项是通过在标准贝尔曼损失的基础上，加上一个最小化 $Q$ 值项来得到 $Q$ 函数的下限。具体来说是在状态-动作对的特定分布 $μ(\textbf{s}, \textbf{a})$ 下，最小化期望 $Q$ 值。由于标准 $Q$ 函数训练不会在未观察到的 state 下查询 *Q* 函数值，而是在未观察到的 action 下查询 Q 函数，因此将 $μ$ 限制为数据集中的状态边际，使得 $μ(\textbf{s}, \textbf{a})=d^{\pi_\beta}(\textbf{s})\mu(\textbf{a}|\textbf{s})$。那么，就有了如下的 basic CQL，其学习到的 $Q$ 函数可以作为真实 $Q$ 函数的下界：
+$$
+\label{4}
+\hat{Q}^{k+1} \leftarrow \arg \min _{Q} {\color{brown}\alpha \mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \mu(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]}+\frac{1}{2} \mathbb{E}_{\mathbf{s}, \mathbf{a} \sim \mathcal{D}}\left[\left(Q(\mathbf{s}, \mathbf{a})-\hat{\mathcal{B}}^{\pi} \hat{Q}^{k}(\mathbf{s}, \mathbf{a})\right)^{2}\right]
+$$
+但是，如果我们只对估计 $V^\pi$ 感兴趣，我们可以大大收紧这个界限。如果只要求 $\pi(\textbf{a}|\textbf{s})$ 下，期望 $\hat Q^\pi$ 能够代表 $V^\pi$ 的下限，可以通过在数据分布下引入一个额外的 $Q$ 值最大化项 $\pi_\beta(\textbf{a}|\textbf{s})$ 来改善边界，从而为策略 $\pi$ 的期望 $Q$ 值提供更严格的下限：
+$$
+\begin{equation}\label{5}
+\begin{aligned}
+\hat{Q}^{k+1} \leftarrow \arg \min _{Q} \alpha \cdot\left(\mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \mu(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]\right.&\left.-{\color{red}{\mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \hat{\pi}_{\beta}(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]}}\right) \\
+&+\frac{1}{2} \mathbb{E}_{\mathbf{s}, \mathbf{a}, \mathbf{s}^{\prime} \sim \mathcal{D}}\left[\left(Q(\mathbf{s}, \mathbf{a})-\hat{\mathcal{B}}^{\pi} \hat{Q}^{k}(\mathbf{s}, \mathbf{a})\right)^{2}\right] .
+\end{aligned}
+\end{equation}
+$$
+由于公式 5 在  behavior policy $\hat\pi_\beta$ 下最大化 $Q$ 值，因此在该策略下的动作的 $Q$ 值可能被高估，即 $\hat Q^\pi$  可能不会逐点下限 $Q^\pi$。虽然原则上，最大化项可以利用 $\hat{\pi}_\beta(\textbf{a}|\textbf{s})$ 以外的其他分布，但我们在附录 D.2 中证明，所得值不能保证是  $\hat{\pi}_\beta(\textbf{a}|\textbf{s})$ 以外的其他分布的下限。
+
+#### Theoretical analysis
+
+公式 $\eqref{4}$ 和 $\eqref{5}$ 使用的是经验贝尔曼算子 $\hat{\mathcal{B}}^\pi$，而不是实际的贝尔曼算子 ${\mathcal{B}}^\pi$
+
+
+
+首先证明，通过迭代公式 $\eqref{4}$ 学到的保守Q函数为真正的Q函数的下界
+
+<img src="img/image-20220628144430021.png" alt="image-20220628144430021" style="zoom: 67%;" />
+
+其次是展示公式 $\eqref{5}$ 在 $μ = π$的情况下，为策略 $π$ 下期望 $Q$ 值的下限。且公式 $\eqref{5}$ 不会逐点下限 $Q$ 估计值。对于这个结果，我们滥用符号，并假设1√|D|指仅状态计数的平方根反比向量，具有与以前类似的校正，用于在计数为零的状态下处理此向量的条目。
+
+<img src="img/image-20220628144700192.png" alt="image-20220628144700192" style="zoom:67%;" />
+
+上面给出的分析假设 $Q$ 函数中没有使用函数近似，这意味着每个迭代都可以精确表示。我们可以将定理3.2中的结果进一步推广到线性函数逼近器和非线性神经网络函数逼近器的情况下，后者建立在神经切线核（NTK）框架上。
+
 ### Conservative Q-Learning for Offline RL
+
+利用上述思想即可以构成本文所提出的 CQL，一种通用的离线策略学习方法。
+
+
+
+我们可以在对每个策略迭代执行完全的 off-policy  评估（πk）和策略改进的一个步骤之间进行交替。但是，这在计算上可能很昂贵。或者，由于策略  $\hat{\pi}^k$ 通常派生自 $Q$  函数，因此我们可以选择 $\mu(\mathbf{a} \mid \mathbf{s})$  来近似策略，从而最大化当前 Q 函数迭代，产生在线算法。具体来说，通过定义针对 $\mu(\mathbf{a} \mid \mathbf{s})$ 的优化问题来实现此类在线算法。该系列的实例由 CQL ($\mathcal{R}$) 表示，其特征在于正则化器 R（μ） 的特定选择：
+
+- CQL ($\mathcal{R}$)
+
+$$
+\label{6}
+\begin{aligned}
+\min _{Q} {\color{red}\max _{\mu}} &\alpha\left(\mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \mu(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]-\mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \hat{\pi}_{\beta}(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]\right) \\
+&+\frac{1}{2} \mathbb{E}_{\mathbf{s}, \mathbf{a}, \mathbf{s}^{\prime} \sim \mathcal{D}}\left[\left(Q(\mathbf{s}, \mathbf{a})-\hat{\mathcal{B}}^{\pi_{k}} \hat{Q}^{k}(\mathbf{s}, \mathbf{a})\right)^{2}\right]+{\color{red}\mathcal{R}(\mu)} \quad(\mathrm{CQL}(\mathcal{R}))
+\end{aligned}
+$$
+
+为了证明 CQL 系列优化问题的普遍性，我们讨论了该系列中特别感兴趣的两个特定实例，并在第 6 节中对它们进行了实证评估。如果我们选择 $\mathcal{R}(\mu)$ 作为相对于先验分布 $\rho(\mathbf{a} \mid \mathbf{s})$ 的KL散度，即 $\mathcal R(\mu) = −D_{KL}(μ, ρ)$。那么我们得到 $\mu(\mathbf{a} \mid \mathbf{s}) \propto \rho(\mathbf{a} \mid \mathbf{s}) \cdot \exp (Q(\mathbf{s}, \mathbf{a}))$（有关推导，请参阅附录 A）。首先，如果 $ρ = Unif(\mathbf{a})$，则公式 $\eqref{6}$ 中的第一项对应于任何状态下 $Q$ 值的 soft-maximum，并产生公式  $\eqref{6}$  的以下变体，称为CQL ($\mathcal{H}$)。
+
+- CQL ($\mathcal{H}$)
+
+$$
+\label{7}
+\min _{Q} \alpha \mathbb{E}_{\mathbf{s} \sim \mathcal{D}}\left[\log \sum_{\mathbf{a}} \exp (Q(\mathbf{s}, \mathbf{a}))-\mathbb{E}_{\mathbf{a} \sim \hat{\pi}_{\beta}(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]\right]+\frac{1}{2} \mathbb{E}_{\mathbf{s}, \mathbf{a}, \mathbf{s}^{\prime} \sim \mathcal{D}}\left[\left(Q-\hat{\mathcal{B}}^{\pi_{k}} \hat{Q}^{k}\right)^{2}\right]
+$$
+
+如果把上一步的策略 $\hat{\pi}^{k-1}$ 当作 $\rho(\mathbf{a} \mid \mathbf{s})$，那么 $\eqref{7}$ 的第一项可以被替换为所选的 $\hat{\pi}^{k-1}$ 的动作对应的 $Q$ 值的指数加权平均值。从经验上讲，我们发现这种变体在高维动作空间下可以更稳定，因为由于高方差，很难通过抽样估计对数 $\sum_{\mathbf{a}} \exp$。
+
+#### Theoretical analysis
+
+我们将从理论上分析CQL，以表明以这种方式推导出的策略更新确实是“保守的”。从某种意义上说，每个连续的策略迭代都针对其值的下限进行了优化。为了清楚起见，我们在本节中陈述了在没有有限样本误差的情况下的结果，但是采样误差可以以与定理3.1和3.2相同的方式合并，我们在附录C中对此进行讨论。 πk，在轻度规律性条件下（策略更新缓慢）。
+
+<img src="img/image-20220628153333611.png" alt="image-20220628153333611" style="zoom:67%;" />
+
+如果学习的策略等于 $\hat{Q}^k$ 的 soft-optimal policy，即当 $\hat{\pi}^{k+1}=\pi_{\hat{Q}^k}$  时，此不等式的 LHS (left-hand side) 等于值中诱导的保守性量 ˆ V k+1 = π ˆ Qk。但是，由于实际策略 ˆ πk+1 可能不同，RHS 是由于此差异而导致的最大潜在高估量。为了获得下限，我们要求低估量更高，如果ε很小，即政策变化缓慢，则可以获得低估量。
 
 
 
