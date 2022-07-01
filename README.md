@@ -42,8 +42,9 @@ Content
 ### Model-free
 
 1. [A Minimalist Approach to Offline Reinforcement Learning](https://proceedings.neurips.cc/paper/2021/file/a8166da05c5a094f7dc03724b41886e5-Paper.pdf) NeurIPS 2021
-2. [CQL: Conservative Q-Learning for Offline Reinforcement Learning](https://proceedings.neurips.cc/paper/2020/file/0d2b2061826a5df3221116a5085a6052-Paper.pdf) NeurIPS 2020
-3. 
+2. [Decision Transformer: Reinforcement Learning via Sequence Modeling](https://arxiv.org/pdf/2106.01345.pdf) NeurIPS 2021 | [Web](https://sites.google.com/berkeley.edu/decision-transformer) [Github](https://github.com/kzl/decision-transformer)
+3. [CQL: Conservative Q-Learning for Offline Reinforcement Learning](https://proceedings.neurips.cc/paper/2020/file/0d2b2061826a5df3221116a5085a6052-Paper.pdf) NeurIPS 2020
+4. 
 
 
 

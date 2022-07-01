@@ -141,3 +141,16 @@ $$
 
 
 ### Safe Policy Improvement Guarantees
+
+
+
+
+$$
+\begin{equation}
+\begin{aligned}
+\hat{Q}^{k+1} \leftarrow \arg \min _{Q} &\alpha \cdot\left(\mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \mu(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]\right.\left.{\color{red}-{\mathbb{E}_{\mathbf{s} \sim \mathcal{D}, \mathbf{a} \sim \hat{\pi}_{\beta}(\mathbf{a} \mid \mathbf{s})}[Q(\mathbf{s}, \mathbf{a})]}}\right) \\
+&+\frac{1}{2} \mathbb{E}_{\mathbf{s}_c, \mathbf{a}_c, \mathbf{s}_c^{\prime} }\left[\left(Q(\mathbf{s}, \mathbf{a})-\hat{\mathcal{B}}^{\pi} \hat{Q}^{k}(\mathbf{s}, \mathbf{a})\right)^{2}\right]\\
+&{\color{darkorange}+ \dfrac{1}{2} \mathbb{E}_{\mathbf{s}_{lc}\simeq\mathbf{s}_l\sim \mathcal{D}, \mathbf{a}_r\sim \mathcal{D}(\mathbf{s}_l)}||\mathbf{a}_{rc}-\mathbf{a}_r||^2 + \dfrac{1}{2} \mathbb{E}_{\mathbf{s}_{rc}\simeq\mathbf{s}_r\sim \mathcal{D}, \mathbf{a}_l\sim \mathcal{D}(\mathbf{s}_r)}||\mathbf{a}_{lc}-\mathbf{a}_l||^2}
+\end{aligned}
+\end{equation}
+$$
