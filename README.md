@@ -40,14 +40,14 @@ Content
 
 ## Methodology
 1. [When Should We Prefer Offline Reinforcement Learning Over Behavioral Cloning?](https://arxiv.org/pdf/2204.05618.pdf) ICLR 2022
-2. [RvS: What is Essential for Offline RL via Supervised Learning?](https://arxiv.org/pdf/2112.10751.pdf) ICLR 2022
+2. [RvS: What is Essential for Offline RL via Supervised Learning?](https://arxiv.org/pdf/2112.10751.pdf) ICLR 2022 | [Note](./Notes/RvS.md)
 
 ### Model-free
 
 1. [A Minimalist Approach to Offline Reinforcement Learning (TD3+BC)](https://proceedings.neurips.cc/paper/2021/file/a8166da05c5a094f7dc03724b41886e5-Paper.pdf) NeurIPS 2021
 2. [Decision Transformer: Reinforcement Learning via Sequence Modeling](https://arxiv.org/pdf/2106.01345.pdf) NeurIPS 2021 | [Web](https://sites.google.com/berkeley.edu/decision-transformer) [Github](https://github.com/kzl/decision-transformer)
 3. [Offline Reinforcement Learning with Fisher Divergence Critic Regularization (Fisher-BRC)](http://proceedings.mlr.press/v139/kostrikov21a/kostrikov21a.pdf) ICML 2021
-4. [Conservative Q-Learning for Offline Reinforcement Learning (CQL)](https://proceedings.neurips.cc/paper/2020/file/0d2b2061826a5df3221116a5085a6052-Paper.pdf) NeurIPS 2020
+4. [Conservative Q-Learning for Offline Reinforcement Learning (CQL)](https://proceedings.neurips.cc/paper/2020/file/0d2b2061826a5df3221116a5085a6052-Paper.pdf) NeurIPS 2020 | [Note](Notes/CQL.md)
 5. [Behavior Regularized Offline Reinforcement Learning (BRAC)](https://arxiv.org/pdf/1911.11361.pdf) arxiv 2019
 6. [Stabilizing Off-Policy Q-Learning via Bootstrapping Error Reduction (BEAR)](https://arxiv.org/pdf/1906.00949.pdf) NeurIPS 2019
 7. [Off-Policy Deep Reinforcement Learning without Exploration (BCQ)](https://arxiv.org/pdf/1812.02900.pdf) ICML 2019
