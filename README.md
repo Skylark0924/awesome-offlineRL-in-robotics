@@ -26,7 +26,7 @@ Content
 
 1. [A Survey on Offline Reinforcement Learning: Taxonomy, Review, and Open Problems](https://arxiv.org/pdf/2203.01387.pdf) arxiv 2022
 1. [Offline Reinforcement Learning: Tutorial, Review, and Perspectives on Open Problems](https://arxiv.org/pdf/2005.01643.pdf) arxiv 2020
-1. [An Optimistic Perspective on Offline Reinforcement Learning](http://proceedings.mlr.press/v119/agarwal20c/agarwal20c.pdf) PMLR 2020
+1. [An Optimistic Perspective on Offline Reinforcement Learning](http://proceedings.mlr.press/v119/agarwal20c/agarwal20c.pdf) ICML 2020
 
 ## Workshop 
 1. [Imitation learning vs. offline reinforcement learning - Sergey Levine](https://www.youtube.com/watch?v=sVPm7zOrBxM)
@@ -57,7 +57,7 @@ Content
 
 1. [Model-Based Offline Planning (MBOP)](https://arxiv.org/pdf/2008.05556.pdf) ICLR 2021
 2. [MOPO: Model-based Offline Policy Optimization](https://proceedings.neurips.cc/paper/2020/file/a322852ce0df73e204b7e67cbbef0d0a-Paper.pdf) NeurIPS 2020
-3. [MOReL : Model-Based Offline Reinforcement Learning](https://proceedings.neurips.cc/paper/2020/file/f7efa4f864ae9b88d43527f4b14f750f-Paper.pdf) NeurIPS 2020
+3. [MOReL: Model-Based Offline Reinforcement Learning](https://proceedings.neurips.cc/paper/2020/file/f7efa4f864ae9b88d43527f4b14f750f-Paper.pdf) NeurIPS 2020
 
 
 ### Combined with Imitation Learning
